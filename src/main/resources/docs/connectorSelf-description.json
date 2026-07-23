@@ -1,0 +1,59 @@
+{
+  "@context": {
+    "ids": "https://w3id.org/idsa/core/",
+    "idsc": "https://w3id.org/idsa/code/"
+  },
+  "@type": "ids:BaseConnector",
+  "@id": "https://circthread.com/ids/connector/id/circthread-01",
+  "ids:description": [
+    {
+      "@value": "IDS Connector reference implementation",
+      "@type": "http://www.w3.org/2001/XMLSchema#string"
+    }
+  ],
+  "ids:version": "8.0.8",
+  "ids:publicKey": {
+    "@type": "ids:PublicKey",
+    "@id": "https://w3id.org/idsa/autogen/publicKey/28a15737-b759-4acc-87c6-e3441b9418ec",
+    "ids:keyType": {
+      "@id": "https://w3id.org/idsa/code/RSA"
+    },
+    "ids:keyValue": "TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF0Qm5wam9hblFjbzNSOTVtUlR5UEtrS2xTSGRlWXh0VzN4SmxaY0drdUFadnBDemkvcEw0amJMTTFMYmczMmQyYzFpdm9Kd21OMCtzOFlRQ1lFTERkTTBRY3cvOEs3M0dVY09RcThTb3FQeDN0OHFYUDc5bm95SGQwNStxV0E5R3BOa0FTOEt2T1N2cmNKWE4wRkNEQmZ5aUZDTm56VFozMjlaOGVxTTZLcjBCWHE5V2J2UXg2bVhmOGVwTE9kOEc4ZVF2WWUvcHdvaUkxMFpSN1ROc0dTRWpxN1F6Y1RBcjlLWDRwVzRMU0c0VjZhMVd4YlJrMHpOeGRVMFd3VUVTcnNnaXBibjhYVTd6VWo1NGlCYW5GYWVVNTViNkRpcHlKOGdyZlhyTSswOWdiTGx5TWlyNmt5akRoSkI5cFBMY0dnSUthdmxHRyt5d3BhWVUvWHBOZlFJREFRQUI="
+  },
+  "ids:outboundModelVersion": "4.2.7",
+  "ids:inboundModelVersion": [
+    "4.2.6",
+    "4.2.7",
+    "4.2.0",
+    "4.1.2",
+    "4.2.1",
+    "4.0.0",
+    "4.1.0",
+    "4.2.4",
+    "4.2.5",
+    "4.2.2",
+    "4.2.3"
+  ],
+  "ids:title": [
+    {
+      "@value": "Dataspace Connector - CircThread - circthread-01",
+      "@type": "http://www.w3.org/2001/XMLSchema#string"
+    }
+  ],
+  "ids:hasDefaultEndpoint" : {
+    "@type" : "ids:ConnectorEndpoint",
+    "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/88d6848f-893b-45f7-b013-8030b17e5129",
+    "ids:accessURL" : {
+      "@id" : "https://host.docker.internal:8080/circthread-01/api/ids/data"
+    }
+  },
+  "ids:securityProfile": {
+    "@id": "https://w3id.org/idsa/code/BASE_SECURITY_PROFILE"
+  },
+  "ids:maintainer": {
+    "@id": "https://www.inesctec.pt/"
+  },
+  "ids:curator": {
+    "@id": "https://www.inesctec.pt/"
+  }
+}

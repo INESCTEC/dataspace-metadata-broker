@@ -1,0 +1,13 @@
+FROM maven:3.8-eclipse-temurin-17-focal AS builder
+# copy the pom and src code to the container
+COPY ./ ./
+# package our application code
+RUN mvn clean package install -DskipTests=true
+
+
+FROM eclipse-temurin:17-jdk-focal
+VOLUME /tmp
+# copy only the artifacts we need from the first stage and discard the rest
+COPY --from=builder /target/*.jar /app.jar
+CMD ["java", "-jar", "/app.jar"]
+

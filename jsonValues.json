@@ -1,0 +1,129 @@
+StringWriter stringWriter = new StringWriter();
+RDFDataMgr.write(stringWriter, model, RDFFormat.JSONLD_COMPACT_PRETTY);
+
+{
+  "@graph": [
+    {
+      "curator": "https:\/\/www.isst.fraunhofer.de\/",
+      "hasDefaultEndpoint": "https:\/\/w3id.org\/inesctec\/stvgodigital\/autogen\/connectorEndpoint\/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "securityProfile": "idsc:BASE_SECURITY_PROFILE",
+      "@type": "ids:BaseConnector",
+      "inboundModelVersion": [
+        "4.2.7",
+        "4.0.0",
+        "4.1.0",
+        "4.2.3",
+        "4.2.4",
+        "4.1.2",
+        "4.2.5",
+        "4.2.6",
+        "4.2.0",
+        "4.2.1",
+        "4.2.2"
+      ],
+      "description": "IDS Connector reference implementation",
+      "@id": "https:\/\/inesctec.pt\/ids\/mediator\/id\/metadata-broker",
+      "publicKey": "https:\/\/w3id.org\/inesctec\/mediators\/autogen\/publicKey\/c3a57495-77ae-4b5e-8e60-783a4804428f",
+      "title": "Metadata Broker",
+      "outboundModelVersion": "4.2.7",
+      "version": "8.0.2",
+      "maintainer": "https:\/\/www.isst.fraunhofer.de\/"
+    },
+    {
+      "@type": "ids:ConfigurationModel",
+      "configurationModelLogLevel": "idsc:MINIMAL_LOGGING",
+      "connectorDeployMode": "idsc:PRODUCTIVE_DEPLOYMENT",
+      "keyStore": "file:\/\/\/conf\/vcese19.inesctec.pt.p12",
+      "trustStore": "file:\/\/\/conf\/truststore.p12",
+      "connectorStatus": "idsc:CONNECTOR_ONLINE",
+      "@id": "https:\/\/w3id.org\/idsa\/autogen\/configurationModel\/7672b568-7878-4f62-8032-5c73de969414",
+      "connectorDescription": "https:\/\/inesctec.pt\/ids\/mediator\/id\/metadata-broker"
+    },
+    {
+      "keyValue": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxczMQBZyCCMyF05Nb\/kkc6ci1kVWn\/2F0+gtok6PqXJBX68S0PqR8CnEVtXh8bYDmWeaJFGMzkofXo0bw+upMSQd+i7znbE7keG\/QoSz\/OhbAb9AzlI10DKLT0GbulvulibdPuIUEGnX2w1It7zD5gDtn\/IY\/dXaiAQZmkj9LNwAgcr\/BvgyWRz+FUUzNG1GU3q4wClNTFO4cNEQnWYMhSYqjWLLITBwhX7+OnfLqtbkdVhd6ZTpsFtcFkpk94pgXkRpaGDT8nfVWGgxCpaGXl7CMHvN7uFBp\/tLImISwuA5oARS5kqSLBZDdKT1fQqj781KyzkNK\/P4pW9y6kgGXQIDAQAB",
+      "@type": "ids:PublicKey",
+      "@id": "https:\/\/w3id.org\/inesctec\/mediators\/autogen\/publicKey\/c3a57495-77ae-4b5e-8e60-783a4804428f",
+      "keyType": "idsc:RSA"
+    },
+    {
+      "accessURL": "http:\/\/localhost:8082\/api\/ids\/data",
+      "@type": "ids:ConnectorEndpoint",
+      "@id": "https:\/\/w3id.org\/inesctec\/stvgodigital\/autogen\/connectorEndpoint\/e5e2ab04-633a-44b9-87d9-a097ae6da3cf"
+    }
+  ],
+  "@context": {
+    "hasDefaultEndpoint": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/hasDefaultEndpoint"
+    },
+    "accessURL": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/accessURL"
+    },
+    "keyValue": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/keyValue"
+    },
+    "configurationModelLogLevel": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/configurationModelLogLevel"
+    },
+    "inboundModelVersion": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/inboundModelVersion"
+    },
+    "description": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/description"
+    },
+    "publicKey": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/publicKey"
+    },
+    "title": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/title"
+    },
+    "version": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/version"
+    },
+    "maintainer": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/maintainer"
+    },
+    "curator": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/curator"
+    },
+    "securityProfile": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/securityProfile"
+    },
+    "rdf": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#",
+    "connectorDeployMode": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/connectorDeployMode"
+    },
+    "keyStore": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/keyStore"
+    },
+    "trustStore": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/trustStore"
+    },
+    "ids": "https:\/\/w3id.org\/idsa\/core\/",
+    "connectorStatus": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/connectorStatus"
+    },
+    "idsc": "https:\/\/w3id.org\/idsa\/code\/",
+    "connectorDescription": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/connectorDescription"
+    },
+    "keyType": {
+      "@type": "@id",
+      "@id": "https:\/\/w3id.org\/idsa\/core\/keyType"
+    },
+    "outboundModelVersion": {
+      "@id": "https:\/\/w3id.org\/idsa\/core\/outboundModelVersion"
+    }
+  }
+}

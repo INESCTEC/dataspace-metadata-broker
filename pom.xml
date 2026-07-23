@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.18</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>pt.inesctec.ids</groupId>
+	<artifactId>dataspace-metadata-broker</artifactId>
+	<version>${revision}</version>
+
+	<name>dataspace-metadata-broker</name>
+	<description>Implementation of the IDS Metadata Broker component</description>
+	<inceptionYear>2023</inceptionYear>
+	<organization>
+		<name>INESC TEC</name>
+		<url>https://www.inesctec.pt</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>${license_name}</name>
+			<distribution>${license_distribution}</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Ana Carolina Chaves</name>
+			<email>ana.c.chaves@inesctec.pt</email>
+			<organization>INESC TEC</organization>
+			<organizationUrl>https://www.inesctec.pt</organizationUrl>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+    <developer>
+      <name>César Toscano</name>
+      <email>ctoscano@inesctec.pt</email>
+      <organization>INESC TEC</organization>
+      <organizationUrl>https://www.inesctec.pt</organizationUrl>
+      <roles>
+        <role>lead</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+	</developers>
+
+	<properties>
+		<!-- General -->
+		<revision>2.2.1</revision>
+
+		<!-- Build info -->
+		<java.version>21</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<maven.minimum.version>3.6.3</maven.minimum.version>
+
+		<!-- IDS Dependencies -->
+		<idscp2.version>0.18.0</idscp2.version>
+		<ids-messaging-services.version>7.0.0</ids-messaging-services.version>
+
+		<!-- Dependencies -->
+		<spring.starter.security>3.1.1</spring.starter.security>
+		<springdoc.version>1.8.0</springdoc.version>
+		<swagger.version>1.6.14</swagger.version>
+		<lombok.version>1.18.32</lombok.version>
+		<gson.version>2.11.0</gson.version>
+		<assertj.version>3.26.0</assertj.version>
+		<commons-collections4.version>4.4</commons-collections4.version>
+		<commons-codec.version>1.17.0</commons-codec.version>
+		<jsonwebtoken.version>0.11.5</jsonwebtoken.version>
+		<httpmime.version>4.5.14</httpmime.version>
+		<jetbrains-annotations.version>16.0.2</jetbrains-annotations.version>
+		<tomcat.version>9.0.78</tomcat.version> <!-- 11.0.0-M9   10.1.11-->
+		<json-path.version>2.9.0</json-path.version>
+		<camel.version>3.21.1</camel.version>
+
+		<!-- Databases -->
+		<apache.jena>4.6.1</apache.jena> <!--4.5.0-->
+
+		<!-- Plugins -->
+		<maven-install-plugin.version>3.1.2</maven-install-plugin.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+		<maven-surefire-plugin.version>3.3.0</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.3.0</maven-failsafe-plugin.version>
+		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+		<maven-site-plugin.version>4.0.0-M15</maven-site-plugin.version> 
+		<versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
+		<spotbugs.version>4.8.6</spotbugs.version>
+		<spotbugs-maven-plugin>4.8.6.0</spotbugs-maven-plugin>
+		<findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+
+    <!-- License -->
+    <license_name>Apache License Version 2.0</license_name>
+    <license_distribution>repo</license_distribution>
+	</properties>
+
+	<dependencies>
+
+    <!-- Spring Boot dependencies -->
+    <!-- By default, if you use the “Starters”, Logback is used for logging -->
+		<dependency>
+      <!-- Core starter, including auto-configuration support, logging and YAML -->
+      <!-- If you use the “Starters”, Logback (ch.qos.logback:logback-classic) is used for logging. -->
+      <!-- ch.qos.logback:logback-classic, org.apache.logging.log4j:log4j-to-slf4j & org.slf4j:jul-to-slf4j are also used  -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+    <!-- 
+      Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you.
+      Once you finish the migration, please make sure to remove this module from your project’s dependencies.
+      https://www.baeldung.com/spring-boot-properties-migrator
+    <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-properties-migrator</artifactId>
+	    <scope>runtime</scope>
+    </dependency>
+    -->
+
+		<dependency>
+      <!-- Starter for testing Spring Boot applications with libraries including
+      JUnit Jupiter, Hamcrest and Mockito -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.vaadin.external.google</groupId>
+					<artifactId>android-json</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+      <!-- Starter for building web, including RESTful, applications using Spring MVC. Uses Tomcat as the default embedded container -->
+      <!-- The spring-boot-starter-json is pulled with the spring-boot-starter-web -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+    <dependency>
+      <!-- Starter for using Spring Security -->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+    <!-- lombok -->
+    <!-- https://projectlombok.org/ -->
+    <!-- https://objectcomputing.com/resources/publications/sett/january-2010-reducing-boilerplate-code-with-project-lombok -->
+    <!-- to integrate lombok on eclipse: copy lombok.jar to eclipse folder and add '-javaagent:lombok.jar' to eclipse.ini -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Needs to run after lombok -->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>-->
+
+		<!-- junit-jupiter -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hamcrest</groupId>
+					<artifactId>hamcrest-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpmime.version}</version>
+		</dependency>
+
+		<!-- okhttp -->
+		<!-- https://square.github.io/okhttp/ -->
+		<!-- https://github.com/square/okhttp -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp-tls</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>${jsonwebtoken.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${commons-collections4.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
+
+		<!-- OpenApi -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
+		<!-- Swagger -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.fhg.aisec.ids</groupId>
+			<artifactId>camel-idscp2</artifactId>
+			<version>${idscp2.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>camel-core</artifactId>
+					<groupId>org.apache.camel</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>de.fraunhofer.iais.eis.ids.infomodel</groupId>
+					<artifactId>java</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>de.fraunhofer.iais.eis.ids</groupId>
+					<artifactId>infomodel-serializer</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.squareup.okhttp3</groupId>
+					<artifactId>okhttp</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>ids.messaging</groupId>
+			<artifactId>messaging</artifactId>
+			<version>${ids-messaging-services.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.jsonwebtoken</groupId>
+					<artifactId>jjwt</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcpkix-fips</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bitbucket.b_c</groupId>
+					<artifactId>jose4j</artifactId>
+				</exclusion>
+				<!-- Already included by camel-idscp2 -->
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.squareup.okhttp3</groupId>
+					<artifactId>okhttp</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-tx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-webmvc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-test</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+
+		<!-- https://github.com/spotbugs/spotbugs -->
+		<dependency>
+			<groupId>com.github.spotbugs</groupId>
+			<artifactId>spotbugs-annotations</artifactId>
+			<version>${spotbugs.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>${jetbrains-annotations.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat</artifactId>
+			<version>${tomcat.version}</version>
+			<type>pom</type>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<version>${apache.jena}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.jena</groupId>
+					<artifactId>jena-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.jena/apache-jena-libs -->
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>apache-jena-libs</artifactId>
+			<version>${apache.jena}</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>${apache.jena}</version>
+		</dependency>
+
+		<!-- json-path -->
+		<!-- https://github.com/json-path/JsonPath -->
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>${json-path.version}</version>
+		</dependency>
+	</dependencies>
+
+  <repositories>
+
+    <repository>
+      <id>Ids-Maven-Package-Repo</id>
+      <url>https://gitlab.inesctec.pt/api/v4/projects/5760/packages/maven</url>
+    </repository>
+
+    <!-- Central Repository is specified by default: https://repo.maven.apache.org/maven2 -->
+
+	</repositories>
+
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>*.properties</include>
+					<include>banner.txt</include>
+				</includes>
+			</resource>
+
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>*.properties</exclude>
+					<exclude>banner.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<pluginManagement>
+			<plugins>
+				<!-- Used during the install phase to add artifact(s) to the local
+                repository -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>${maven-install-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+    <!-- this section was copied/adapted from dataspaceapp4edi project --> 
+		<plugins>
+
+      <!-- Used to compile the sources of your project. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${maven.compiler.release}</source>
+          <target>${maven.compiler.release}</target>
+          <compilerArgs>
+            <arg>-Xlint:deprecation</arg>
+            <arg>-Xlint:unchecked</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <!-- Provides goals to control certain environmental constraints such as Maven version, JDK version and OS family along with many more built-in rules and user created rules. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${maven.minimum.version}</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>${java.version}</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Used during the test phase of the build lifecycle to execute the unit tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+      </plugin>
+
+      <!-- Designed to run integration tests while the Surefire Plugin is designed to run unit tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+      </plugin>
+
+      <!-- Used to generate a site for the project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven-site-plugin.version}</version>
+      </plugin>
+
+      <!-- Allows you to package executable jar or war archives, run Spring Boot applications, generate build information and start your Spring Boot application prior to running integration tests. -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+		  <version>${project.parent.version}</version>
+		  <executions>
+			  <execution>
+				  <goals>
+					  <goal>repackage</goal>
+				  </goals>
+			  </execution>
+		  </executions>
+      </plugin>
+
+      <!-- Used during the install phase to add artifact(s) to the local repository -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven-install-plugin.version}</version>
+      </plugin>
+
+      <!-- provides the capability to build jars -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+      </plugin>
+
+      <!-- https://spotbugs.github.io/spotbugs-maven-plugin -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs-maven-plugin}</version>
+        <configuration>
+          <effort>Max</effort> <!-- min|less|default|more|max -->
+          <threshold>Low</threshold> <!-- confidence/priority threshold for reporting issues: low|medium|high  medium is default, Low == Report all bugs -->
+          <plugins>
+            <!-- https://find-sec-bugs.github.io/ -->
+            <plugin>
+              <groupId>com.h3xstream.findsecbugs</groupId>
+              <artifactId>findsecbugs-plugin</artifactId>
+              <version>${findsecbugs-plugin.version}</version>
+            </plugin>
+          </plugins>
+        </configuration>
+        <dependencies>
+          <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+          <!-- https://spotbugs.github.io/ -->
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>${spotbugs.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+		</plugins>
+	</build>
+
+</project>

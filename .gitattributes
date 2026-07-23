@@ -1,0 +1,22 @@
+# This configuration overrides the core.autocrlf setting for all repository contributors.
+# But ensure that 'autocrlf = false'
+# This ensures consistent behavior for all users, regardless of their Git settings and environment.
+
+# Always convert line endings to LF on checkout.
+# The goal is to use ONLY LF files even on Windows.
+# This setting forces Git to normalize line endings to LF on checkin and prevents conversion to CRLF when the file is checked out.
+
+*.java       text eol=lf
+*.json       text eol=lf
+*.properties text eol=lf
+*.yml        text eol=lf
+*.yaml       text eol=lf
+*.sh         text eol=lf
+*.bat        text eol=crlf
+*.xml        text eol=lf
+*.md         text eol=lf
+*.urdf       text eol=lf
+*.dae        text eol=lf
+*.ts         text eol=lf
+*.html       text eol=lf
+*.txt        text eol=lf

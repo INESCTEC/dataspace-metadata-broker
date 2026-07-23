@@ -1,0 +1,62 @@
+{
+  "@context" : {
+    "ids" : "https://w3id.org/idsa/core/",
+    "idsc" : "https://w3id.org/idsa/code/"
+  },
+  "@type" : "ids:ConfigurationModel",
+  "@id" : "https://w3id.org/idsa/autogen/configurationModel/7672b568-7878-4f62-8032-5c73de969414",
+  "ids:configurationModelLogLevel" : {
+    "@id" : "idsc:MINIMAL_LOGGING"
+  },
+  "ids:connectorDeployMode" : {
+    "@id" : "idsc:PRODUCTIVE_DEPLOYMENT"
+  },
+  "ids:connectorDescription" : {
+    "@type" : "ids:Broker",
+    "@id" : "https://inesctec.pt/ids/mediator/id/metadata-broker",
+    "ids:publicKey" : {
+      "@type" : "ids:PublicKey",
+      "@id" : "https://w3id.org/inesctec/mediators/autogen/publicKey/c3a57495-77ae-4b5e-8e60-783a4804428f",
+      "ids:keyType" : {
+        "@id" : "idsc:RSA"
+      },
+      "ids:keyValue" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxczMQBZyCCMyF05Nb/kkc6ci1kVWn/2F0+gtok6PqXJBX68S0PqR8CnEVtXh8bYDmWeaJFGMzkofXo0bw+upMSQd+i7znbE7keG/QoSz/OhbAb9AzlI10DKLT0GbulvulibdPuIUEGnX2w1It7zD5gDtn/IY/dXaiAQZmkj9LNwAgcr/BvgyWRz+FUUzNG1GU3q4wClNTFO4cNEQnWYMhSYqjWLLITBwhX7+OnfLqtbkdVhd6ZTpsFtcFkpk94pgXkRpaGDT8nfVWGgxCpaGXl7CMHvN7uFBp/tLImISwuA5oARS5kqSLBZDdKT1fQqj781KyzkNK/P4pW9y6kgGXQIDAQAB"
+    },
+    "ids:description" : [ {
+      "@value" : "IDS Connector reference implementation",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:version" : "8.0.2",
+    "ids:hasDefaultEndpoint" : {
+      "@type" : "ids:ConnectorEndpoint",
+      "@id" : "https://w3id.org/inesctec/stvgodigital/autogen/connectorEndpoint/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "ids:accessURL" : {
+        "@id" : "http://localhost:8082/api/ids/data"
+      }
+    },
+    "ids:outboundModelVersion" : "4.2.7",
+    "ids:inboundModelVersion" : [ "4.0.0", "4.1.0", "4.1.2", "4.2.0", "4.2.1", "4.2.2", "4.2.3", "4.2.4", "4.2.5", "4.2.6", "4.2.7" ],
+    "ids:title" : [ {
+      "@value" : "Metadata Broker",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:securityProfile" : {
+      "@id" : "idsc:BASE_SECURITY_PROFILE"
+    },
+    "ids:curator" : {
+      "@id" : "https://www.isst.fraunhofer.de/"
+    },
+    "ids:maintainer" : {
+      "@id" : "https://www.isst.fraunhofer.de/"
+    }
+  },
+  "ids:trustStore" : {
+    "@id" : "file:///conf/truststore.p12"
+  },
+  "ids:connectorStatus" : {
+    "@id" : "idsc:CONNECTOR_ONLINE"
+  },
+  "ids:keyStore" : {
+    "@id" : "file:///conf/vcese19.inesctec.pt.p12"
+  }
+}

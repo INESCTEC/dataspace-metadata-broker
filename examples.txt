@@ -1,0 +1,151 @@
+StringWriter stringWriter = new StringWriter();
+RDFDataMgr.write(stringWriter, model, RDFFormat.JSONLD_COMPACT_PRETTY);
+***********************************************************************************************************
+try {
+      // Start a write transaction
+      dataset.begin(ReadWrite.WRITE);
+      Model model = dataset.getDefaultModel();
+      UpdateAction.parseExecute(delete, model);
+
+      dataset.commit();
+    } catch (Exception e) {
+      dataset.abort();
+      System.err.println("Error removing data from SPARQL database: " + e.getMessage());
+    } finally {
+      dataset.end();
+    }
+
+
+***********************************************************************************************************
+The sw variable needs to be updated to put the PREFIX before 'INSERT DATA {'. Otherwise, it works
+
+private void saveModel(Model model) {
+    LOGGER.info("Registering Connector...");
+
+    // Convert the Jena Model to RDF data in Turtle format
+    StringWriter sw = util.convertToTurleFormat(model);
+
+    String updateString = "INSERT DATA { " + sw.toString().replace("@prefix", "PREFIX") + " }";
+    System.out.println(updateString);
+
+    // Set up Basic Authentication credentials
+    CredentialsProvider provider = new BasicCredentialsProvider();
+    provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("admin", "test"));
+
+    // Create an HttpClient with the Basic Authentication credentials
+    HttpClient httpclient = HttpClients.custom()
+            .setDefaultCredentialsProvider(provider)
+            .build();
+
+    // Execute the SPARQL Update query on the Fuseki server
+    UpdateProcessor processor = UpdateExecutionFactory.createRemote(
+            UpdateFactory.create(updateString),
+            fusekiServer+"/"+datasetName+FUSEKI_UPDATE,httpclient
+    );
+    processor.execute();
+  }
+
+
+*********************************************************************************************************
+WORKS
+{
+String delete ="drop graph <"+accessor.getFusekiServer()+"/"+accessor.getDatasetName()+FUSEKI_DATA+"/connectors>";
+    //String delete="DELETE { ?s ?p ?o . } WHERE { ?s ?p ?o . }";
+
+    try {
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Content-Type", "application/sparql-update");
+      headers.add("Authorization", "Basic " + getEncodedCredentials());
+
+      HttpEntity<String> requestEntity = new HttpEntity<>(delete, headers);
+
+      RestTemplate restTemplate = new RestTemplate();
+      ResponseEntity<String> response = restTemplate
+              .exchange(fusekiServer+"/"+datasetName+FUSEKI_UPDATE, HttpMethod.POST, requestEntity, String.class);
+
+      if (response.getStatusCode().is2xxSuccessful()) {
+        LOGGER.info("Data was removed successfully");
+      } else {
+        LOGGER.error("Error removing data from database. Status code: " + response.getStatusCodeValue());
+        System.err.println("Error removing data from database. Status code: " + response.getStatusCodeValue());
+      }
+    } catch (Exception e) {
+      LOGGER.error("Error removing data from database: " + e.getMessage());
+      System.err.println("Error removing data from database: " + e.getMessage());
+    }}
+
+  private String getEncodedCredentials() {
+    String username="admin";
+    String password="test";
+    String credentials = username + ":" + password;
+    return new String(Base64.encodeBase64(credentials.getBytes()));
+  }
+
+
+  ******************************************************************************************************
+String query="PREFIX ids: <https://w3id.org/idsa/core/> \n" +
+            "\n" +
+            "SELECT ?uri FROM NAMED <"+connectorModel.get().getName()+"> \n" +
+            "WHERE { GRAPH ?g \n" +
+            "  { ?uri a ids:Resource . FILTER ( \""+resourceID+"\"  )\n" +
+            "  }}";
+Query: PREFIX ids: <https://w3id.org/idsa/core/>
+
+       SELECT ?uri FROM NAMED <https://vcese19.inesctec.pt:4567/connectors/662943290>
+       WHERE { GRAPH ?g
+         { ?uri a ids:Resource . FILTER regex( str(?uri), "-975514948" )
+         }}
+
+******************************************************************************************************
+// Remove all statements where the object is the subject
+    connectorModel.getModel().listStatements(objectToRemove, null, (Resource) null).forEachRemaining(statementsToRemove::add);
+
+    LOGGER.debug("Removing Statements Object");
+    // Remove all statements where the object is the object
+    connectorModel.getModel().listStatements(null, null, objectToRemove).forEachRemaining(System.out::println);
+    connectorModel.getModel().listStatements(null, null, objectToRemove).forEachRemaining(statementsToRemove::add);
+
+******************************************************************************************************
+// Converte de um Model para o ResultSet
+ResultSet resultSet = ResultSetFactory.makeResults(resultModel);
+ResultSetFormatter.outputAsTSV(outputStream, resultSet);
+
+******************************************************************************************************
+// Enviar mensagens IDS
+@Autowired
+private IdsHttpService idsHttpService;
+
+...
+MultipartBody body = InfomodelMessageBuilder.messageWithString(descriptionRequestMessage, "");
+final var response = idsHttpService.sendAndCheckDat(body, URI.create(catalogUri));
+
+// Verificar se o DAT é valido
+dapsValidator.checkDat(new DynamicAttributeTokenBuilder()
+            ._tokenValue_(headers.get("ids-securitytoken").toString())
+            ._tokenFormat_(TokenFormat.JWT)
+            .build())
+
+******************************************************************************************************
+// Usar Transações e irfazer a query retornar apenas o Subject
+try (RDFConnection conn = RDFConnection.connect(accessor.getFusekiEndpoint())) {
+      ResultSet safeCopy =
+          Txn.calculateRead(conn, () -> {
+            // Process results by row:
+            conn.querySelect(query, (qs) -> {
+              Resource subject = qs.getResource("subject") ;
+              System.out.println("Subject: "+subject) ;
+            }) ;
+            ResultSet rs = conn.query(query).execSelect() ;
+            return ResultSetFactory.copyResults(rs) ;
+          });
+
+
+******************************************************************************************************
+try {
+           // ShaclValidator.validateRdf(headerMessage).getEntries().forEach(System.out::println);
+            List list=ShaclValidator.validateRdf(headerMessage).getEntries().stream().map(entry -> entry.message()).collect(Collectors.toList());
+
+            list.forEach(System.out::println);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
