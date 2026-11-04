@@ -1,5 +1,5 @@
-FROM eclipse-temurin:21-jdk-jammy
-# Hotspot based on ubuntu 22.04 LTS (jammy)
+FROM eclipse-temurin:25-jdk-noble
+# Hotspot based on ubuntu 24.04 LTS (noble)
 
 VOLUME /tmp
 COPY ./target/broker-*.jar app.jar
