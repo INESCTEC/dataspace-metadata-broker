@@ -10,7 +10,7 @@ IDS connectors publish metadata about themselves and their resources to the
 broker. Other participants can retrieve that metadata in RDF formats or query
 it with SPARQL.
 
-The project is currently version `2.2.1` and is licensed under the Apache
+The project is currently version `2.2.2` and is licensed under the Apache
 License 2.0.
 
 ## Main Capabilities
