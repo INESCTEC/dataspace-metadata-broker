@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.18</version>
+		<version>4.2.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -53,7 +53,7 @@
 
 	<properties>
 		<!-- General -->
-		<revision>2.2.2</revision>
+		<revision>3.0.0</revision>
 
 		<!-- Build info -->
 		<java.version>21</java.version>
@@ -61,27 +61,26 @@
 		<maven.minimum.version>3.8.9</maven.minimum.version>
 
 		<!-- IDS Dependencies -->
-		<idscp2.version>0.18.0</idscp2.version>
-		<ids-messaging-services.version>7.0.0</ids-messaging-services.version>
+		<ids-messaging-services.version>7.0.1</ids-messaging-services.version>
 
 		<!-- Dependencies -->
-		<spring.starter.security>3.1.1</spring.starter.security>
-		<springdoc.version>1.8.0</springdoc.version>
-		<swagger.version>1.6.16</swagger.version>
+		<springdoc.version>3.2.1</springdoc.version>
+		<okhttp.version>4.12.0</okhttp.version>
+		<bval-javax.version>2.0.6</bval-javax.version> <!-- do not upgrade to 3.x: 2.0.x is the javax.validation line -->
+
 		<lombok.version>1.18.48</lombok.version>
-		<gson.version>2.11.0</gson.version>
+		<gson.version>2.15.0</gson.version>
 		<assertj.version>3.27.7</assertj.version>
 		<commons-collections4.version>4.6.0</commons-collections4.version>
 		<commons-codec.version>1.23.0</commons-codec.version>
-		<jsonwebtoken.version>0.11.5</jsonwebtoken.version>
+		<jsonwebtoken.version>0.11.5</jsonwebtoken.version> <!-- do not upgrade to 0.12.x: binary incompatible with ids-messaging 7.x -->
+		<jose4j.version>0.9.7</jose4j.version>
 		<httpmime.version>4.5.14</httpmime.version>
 		<jetbrains-annotations.version>16.0.3</jetbrains-annotations.version>
-		<tomcat.version>9.0.78</tomcat.version> <!-- 11.0.0-M9   10.1.11-->
-		<json-path.version>2.9.0</json-path.version>
-		<camel.version>3.21.1</camel.version>
+		<json-path.version>2.10.0</json-path.version>
 
 		<!-- Databases -->
-		<apache.jena>4.6.1</apache.jena> <!--4.5.0-->
+		<apache.jena>4.10.0</apache.jena>
 
 		<!-- Plugins -->
 		<maven-install-plugin.version>3.2.0</maven-install-plugin.version>
@@ -143,10 +142,30 @@
 		</dependency>
 
 		<dependency>
-      <!-- Starter for building web, including RESTful, applications using Spring MVC. Uses Tomcat as the default embedded container -->
-      <!-- The spring-boot-starter-json is pulled with the spring-boot-starter-web -->
+      <!-- Spring Boot 4 modular test support for Spring MVC and the embedded web server (MockMvc, @LocalServerPort) -->
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+      <!-- TestRestTemplate moved to its own module in Spring Boot 4 -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-resttestclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+      <!-- RestTemplateBuilder (required by TestRestTemplate) lives in its own module in Spring Boot 4 -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-restclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+      <!-- Starter for building web, including RESTful, applications using Spring MVC. Uses Tomcat as the default embedded container -->
+      <!-- Renamed from spring-boot-starter-web in Spring Boot 4 -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
     <dependency>
@@ -233,10 +252,12 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp-tls</artifactId>
+			<version>${okhttp.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
@@ -244,6 +265,26 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>${jsonwebtoken.version}</version>
+		</dependency>
+		<!-- jjwt implementation used at runtime by ids-messaging (DAT validation). Must stay on 0.11.x: ids-messaging core 7.x calls Jwts.parser() returning JwtParser -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${jsonwebtoken.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>${jsonwebtoken.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Used by ids-messaging TokenProviderService to read the DAPS JWKS -->
+		<dependency>
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+			<version>${jose4j.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
@@ -263,39 +304,22 @@
 		<!-- OpenApi -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
 
-		<!-- Swagger -->
+		<!--
+			Two Bean Validation providers are needed side by side:
+			- jakarta.validation: Hibernate Validator 8 (managed by Spring Boot, via springdoc's starter-validation),
+			  used by Spring Boot to validate @Validated @ConfigurationProperties such as ids-messaging's ConfigProperties.
+			- javax.validation: the IDS infomodel builders (de.fraunhofer.iais.eis ... VocabUtil.validate) still call javax.validation.
+			  Hibernate Validator 6.2 cannot be used for this because it shares coordinates with Hibernate Validator 8,
+			  so Apache BVal 2.0.x (Bean Validation 2.0, javax) provides it instead. Do not upgrade to BVal 3.x (jakarta).
+		-->
 		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>${swagger.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.fhg.aisec.ids</groupId>
-			<artifactId>camel-idscp2</artifactId>
-			<version>${idscp2.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>camel-core</artifactId>
-					<groupId>org.apache.camel</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>de.fraunhofer.iais.eis.ids.infomodel</groupId>
-					<artifactId>java</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>de.fraunhofer.iais.eis.ids</groupId>
-					<artifactId>infomodel-serializer</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.squareup.okhttp3</groupId>
-					<artifactId>okhttp</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.apache.bval</groupId>
+			<artifactId>bval-jsr</artifactId>
+			<version>${bval-javax.version}</version>
 		</dependency>
 
 		<dependency>
@@ -323,11 +347,6 @@
 					<groupId>org.bitbucket.b_c</groupId>
 					<artifactId>jose4j</artifactId>
 				</exclusion>
-				<!-- Already included by camel-idscp2 -->
-				<exclusion>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-				</exclusion>
 				<exclusion>
 					<groupId>com.squareup.okhttp3</groupId>
 					<artifactId>okhttp</artifactId>
@@ -351,6 +370,31 @@
 			</exclusions>
 		</dependency>
 
+		<!--
+			Jackson 2 ObjectMapper bean auto-configuration. ids-messaging's MessageDispatcher injects a
+			com.fasterxml.jackson.databind.ObjectMapper, which Spring Boot 4 no longer creates by default (it creates a Jackson 3
+			JsonMapper). Configured through spring.jackson2.* properties. Deprecated by Spring Boot in favour of Jackson 3,
+			but required while ids-messaging is on Jackson 2.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-jackson2</artifactId>
+		</dependency>
+
+		<!--
+			Jackson 2 modules used by MyJacksonObjectMapper (JsonConverter). Spring Boot 4 web starters bring Jackson 3
+			(tools.jackson), so these are no longer transitive; versions come from Boot's jackson-2-bom.
+			The IDS infomodel and jjwt-jackson also stay on Jackson 2.
+		-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jdk8</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -370,14 +414,6 @@
 			<artifactId>annotations</artifactId>
 			<version>${jetbrains-annotations.version}</version>
 			<scope>compile</scope>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat -->
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat</artifactId>
-			<version>${tomcat.version}</version>
-			<type>pom</type>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->

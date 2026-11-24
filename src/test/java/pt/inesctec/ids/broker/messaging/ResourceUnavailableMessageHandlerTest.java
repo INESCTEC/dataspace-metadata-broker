@@ -23,6 +23,10 @@
  */
 package pt.inesctec.ids.broker.messaging;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iais.eis.*;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
@@ -42,7 +46,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.TestPropertySource;
 import pt.inesctec.ids.broker.converter.FusekiConverter;
 import pt.inesctec.ids.broker.service.BrokerService;
@@ -64,6 +68,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static pt.inesctec.ids.broker.config.IDSConstants.SAME_AS;
 
+// Spring Boot 4 no longer initialises @Mock fields in @SpringBootTest classes (MockitoTestExecutionListener was removed).
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource(
@@ -89,10 +96,10 @@ class ResourceUnavailableMessageHandlerTest {
   @Mock
   DapsTokenProvider provider;
 
-  @MockBean
+  @MockitoBean
   private ConfigurationModel configurationModel;
 
-  @MockBean
+  @MockitoBean
   private DapsValidator dapsValidator;
 
   Broker broker;

@@ -23,11 +23,14 @@
  */
 package pt.inesctec.ids.broker;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,14 +53,15 @@ public class SecurityConfig{
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeRequests() // allow requests
-        .antMatchers("/", "/api/ids/data", "/health", "/connectors", "/connectors/**").permitAll() // that matches this
-        .anyRequest() // all requests above
-        .authenticated()  // needs authentication
-        .and()
-        .csrf().disable()
+        .authorizeHttpRequests(auth -> auth
+            // Spring Security 6 also authorizes ERROR/FORWARD dispatches; without this, an error on a
+            // public route would be returned as 401 instead of the original status (Boot 2 behaviour).
+            .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
+            .requestMatchers("/", "/api/ids/data", "/health", "/connectors", "/connectors/**").permitAll() // public routes
+            .anyRequest().authenticated()) // everything else needs authentication
+        .csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .httpBasic();
+        .httpBasic(Customizer.withDefaults());
     return http.build();
   }
 

@@ -67,7 +67,7 @@ import pt.inesctec.ids.broker.service.DescriptionService;
 import pt.inesctec.ids.broker.service.ModelService;
 import pt.inesctec.ids.broker.util.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.*;
@@ -80,7 +80,6 @@ import static pt.inesctec.ids.broker.config.ResponseType.*;
 @RestController
 @ApiResponse
 @Tag(name = "2. Connectors", description = "API for Information regarding the Connectors registered on the Broker")
-@RequiredArgsConstructor
 @RequestMapping("/connectors")
 public class ConnectorController {
 
@@ -109,6 +108,11 @@ public class ConnectorController {
      */
     @Autowired
     private IdsHttpService idsHttpService;
+
+  public ConnectorController(BrokerSelfDescription brokerSelfDescription, DapsTokenProvider provider) {
+    this.brokerSelfDescription = brokerSelfDescription;
+    this.provider = provider;
+  }
 
 // TODO: Add REST Catalog endpoints - //  https://app.swaggerhub.com/apis/idsa/IDS-Broker/1.3.1#/Catalog
 

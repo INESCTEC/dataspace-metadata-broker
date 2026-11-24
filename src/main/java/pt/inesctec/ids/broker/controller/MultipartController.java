@@ -52,7 +52,7 @@ import pt.inesctec.ids.broker.service.DescriptionService;
 import pt.inesctec.ids.broker.util.FusekiConnectionAccessor;
 import pt.inesctec.ids.broker.util.MessageUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Map;
 

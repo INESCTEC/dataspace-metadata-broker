@@ -58,9 +58,10 @@ public class ExceptionUtil {
 
   public static String getHeaderNamesFromException(ConstraintViolationException e){
     // Replace the Header name to be equal to the IDSA-Broker and add 'ids-' to the header names
+    // Each message is "<field> <constraint message>". Keep only the field name, so the result does not depend on the
+    // Bean Validation provider's wording ("must not be null" in Hibernate Validator, "may not be null" in Apache BVal).
     return e.getMessages().stream()
-        .map(err-> err
-            .replace(" must not be null", "")
+        .map(err-> err.trim().split("\\s+", 2)[0]
             .replace("tokenValue", "securitytoken")
             .toLowerCase()
         )

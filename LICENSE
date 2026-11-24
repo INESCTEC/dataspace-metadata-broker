@@ -5,11 +5,15 @@ Data Space Metadata Broker (dataspace-metadata-broker) is a software used as a c
 This software is authored by Ana Carolina Marques Chaves, César Augusto Matos Toscano and Joao Gamboa Correia.
 
 This program makes use and is distributed with the following libraries:
-* de.fhg.aisec.ids.camel-idscp2 (https://github.com/industrial-data-space/idscp2-jvm)
 * ids.messaging.messaging (https://github.com/International-Data-Spaces-Association/IDS-Messaging-Services)
+  (pt.inesctec.ids.broker.controller.IdsMessageController is a modified copy of its ids.messaging.endpoint.MessageController)
 * org.springframework.boot (https://github.com/spring-projects/spring-boot)
-* org.springdoc.springdoc-openapi-ui (https://github.com/springdoc/springdoc-openapi)
-* io.swagger.swagger-annotations (https://github.com/swagger-api/swagger-core)
+* org.springdoc.springdoc-openapi-starter-webmvc-ui (https://github.com/springdoc/springdoc-openapi)
+* org.apache.bval.bval-jsr (https://github.com/apache/bval)
+* org.hibernate.validator.hibernate-validator (https://github.com/hibernate/hibernate-validator)
+* com.fasterxml.jackson.datatype.jackson-datatype-jdk8 (https://github.com/FasterXML/jackson-modules-java8)
+* com.fasterxml.jackson.datatype.jackson-datatype-jsr310 (https://github.com/FasterXML/jackson-modules-java8)
+* org.bitbucket.b_c.jose4j (https://bitbucket.org/b_c/jose4j)
 * com.google.code.gson.gson (https://github.com/google/gson)
 * org.apache.jena.jena-arq (https://github.com/apache/jena)
 * org.apache.jena.apache-jena-libs (https://github.com/apache/jena)
@@ -24,6 +28,8 @@ This program makes use and is distributed with the following libraries:
 * com.squareup.okhttp3.okhttp (https://github.com/square/okhttp)
 * com.squareup.okhttp3.okhttp-tls (https://github.com/square/okhttp)
 * io.jsonwebtoken.jjwt-api (https://github.com/jwtk/jjwt)
+* io.jsonwebtoken.jjwt-impl (https://github.com/jwtk/jjwt)
+* io.jsonwebtoken.jjwt-jackson (https://github.com/jwtk/jjwt)
 * org.apache.commons.commons-collections4 (https://github.com/apache/commons-collections)
 * commons-codec.commons-codec (https://github.com/apache/commons-codec)
 

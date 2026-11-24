@@ -40,6 +40,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import pt.inesctec.ids.broker.dto.BrokerSelfDescription;
 import pt.inesctec.ids.broker.service.AdminGraphService;
 import pt.inesctec.ids.broker.service.BrokerService;
@@ -51,11 +52,15 @@ import java.io.IOException;
 
 @Log4j2
 @SpringBootApplication
-@ComponentScan({
+@ComponentScan(value = {
 				"pt.inesctec.ids.broker",
 				"ids.*",
 				"ids.messaging.*"
-})
+		},
+		// ids-messaging's own HTTP endpoint (MessageController + EndpointService) is built on javax.servlet and cannot
+		// load on Spring Boot 3+. It is replaced by the jakarta port controller.IdsMessageController, which serves the
+		// same routes (/api/ids/data and /api/ids/infrastructure, multipart/form-data).
+		excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ids\\.messaging\\.endpoint\\..*"))
 @Configuration
 public class BrokerApplication implements CommandLineRunner {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BrokerApplication.class);

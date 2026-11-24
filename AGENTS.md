@@ -10,7 +10,7 @@ IDS connectors publish metadata about themselves and their resources to the
 broker. Other participants can retrieve that metadata in RDF formats or query
 it with SPARQL.
 
-The project is currently version `2.2.2` and is licensed under the Apache
+The project is currently version `3.0.0` and is licensed under the Apache
 License 2.0.
 
 ## Main Capabilities
@@ -32,15 +32,14 @@ License 2.0.
 
 - Java 21
 - Maven and Maven Wrapper
-- Spring Boot 2.7
-- Spring MVC and embedded Tomcat
+- Spring Boot 4.2 (Spring Framework 7, Spring Security 7, Jakarta EE)
+- Spring MVC and embedded Tomcat 11
 - Spring Security with stateless HTTP Basic authentication
 - Apache Jena for RDF models and SPARQL
 - Apache Jena Fuseki for persistent RDF graph storage
 - IDS Messaging Services
 - DAPS token validation
-- Optional IDSCP2 support
-- Springdoc OpenAPI/Swagger
+- Springdoc OpenAPI/Swagger (springdoc 3)
 - JUnit, Mockito, AssertJ, and Spring test utilities
 - Docker and Docker Compose
 
@@ -95,7 +94,10 @@ By default, the application expects:
 The primary routes are:
 
 - `GET /`: return the broker self-description.
-- `POST /api/ids/data`: process IDS multipart messages.
+- `POST /api/ids/data` and `POST /api/ids/infrastructure`: process IDS multipart
+  messages (`multipart/form-data`, served by `IdsMessageController`). Requests to
+  `/api/ids/data` with `Accept: multipart/mixed` are served by `MultipartController`
+  instead (PlugFest description requests).
 - `GET /connectors` and `GET /connectors/**`: retrieve the active connector
   catalog or a requested catalog element.
 - `POST /connectors`: register a connector.
@@ -120,7 +122,6 @@ It contains settings for:
 - Broker catalog URI
 - DAPS endpoints and DAT validation
 - IDS messaging, SHACL validation, and policy negotiation
-- IDSCP2
 - Spring Security credentials
 - OpenAPI/Swagger
 - HTTP timeouts and logging
@@ -181,4 +182,28 @@ build-publish-versioned-docker-image.sh
 - Avoid committing keystores, truststores, tokens, passwords, or
   environment-specific endpoints.
 - Check `application-test.properties` when behavior differs under tests.
+
+## Dependency Constraints
+
+`ids-messaging` 7.x and the IDS infomodel are built for Spring Boot 2 (`javax`,
+Jackson 2). The broker runs on Spring Boot 4 thanks to the workarounds below; do
+not "upgrade" or remove them without checking the reason in `pom.xml`:
+
+- `ids.messaging.endpoint.*` is excluded from component scanning in
+  `BrokerApplication` (it uses `javax.servlet`). `IdsMessageController` is its
+  jakarta port and must keep serving the same routes.
+- `jjwt` must stay on `0.11.x`: `ids-messaging` calls the 0.11 `Jwts.parser()`
+  API (binary incompatible with 0.12+). `jjwt-impl`, `jjwt-jackson` and `jose4j`
+  are declared explicitly because DAT validation needs them at runtime.
+- Two Bean Validation providers are required: Hibernate Validator (jakarta,
+  managed by Spring Boot) for Spring, and Apache BVal `2.0.x` (javax) for the
+  infomodel builders. Do not move BVal to 3.x. Code must not depend on the
+  provider's message wording (see `ExceptionUtil`).
+- `spring-boot-jackson2` provides the Jackson 2 `ObjectMapper` bean injected by
+  `ids-messaging`'s `MessageDispatcher` (configured with `spring.jackson2.*`).
+  Spring MVC itself uses Jackson 3 (`spring.jackson.*`).
+- `okhttp` is pinned to 4.x (Spring Boot 4 no longer manages it).
+- In tests, `@SpringBootTest` classes that use `@Mock` need
+  `@ExtendWith(MockitoExtension.class)`; Spring Boot 4 no longer initialises
+  them.
 
