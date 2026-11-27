@@ -203,6 +203,14 @@ not "upgrade" or remove them without checking the reason in `pom.xml`:
   `ids-messaging`'s `MessageDispatcher` (configured with `spring.jackson2.*`).
   Spring MVC itself uses Jackson 3 (`spring.jackson.*`).
 - `okhttp` is pinned to 4.x (Spring Boot 4 no longer manages it).
+- Apache Jena must stay on `4.x` (currently `4.10.0`, the last 4.x release).
+  The IDS `infomodel-serializer` (pulled by `ids-messaging`) parses
+  `RDFNode.toString()` with `substring`, assuming Jena 4's format. From Jena
+  5.0.0 on, plain `xsd:string` literals are printed without quotes, so the
+  infomodel `Serializer.deserialize` silently drops the first and last
+  character of every string literal (e.g. connector titles and descriptions
+  in every incoming IDS message). Tested with 5.0.0, 5.6.0 and 6.3.0 in
+  November 2026. Do not upgrade Jena unless the infomodel parser is replaced.
 - In tests, `@SpringBootTest` classes that use `@Mock` need
   `@ExtendWith(MockitoExtension.class)`; Spring Boot 4 no longer initialises
   them.
